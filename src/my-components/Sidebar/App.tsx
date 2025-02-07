@@ -32,7 +32,7 @@ const items = [
 
 export default function CustomSidebar(): JSX.Element {
   return (
-    <Sidebar variant='floating' collapsible="icon">
+    <Sidebar variant='sidebar' collapsible="icon" className="dark:bg-black">
       <SidebarHeader>
         <SidebarContent>
           <SidebarGroup>

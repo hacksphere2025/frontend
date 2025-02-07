@@ -2,10 +2,19 @@ import { Input } from "@/components/ui/input";
 import React from "react";
 import { JSX } from "react";
 import MessageBubble from "./components/MessageBubble";
-import { MessageUserType } from "@/types/Message";
+import Table from "./components/Table/App";
+
+enum MessageUserType {
+  user,
+  bot
+}
 
 export default function ChatBox(): JSX.Element {
-  const [response, setResponse] = React.useState<[]>([
+  type inp = {
+    userType: MessageUserType;
+    data: string;
+  }
+  const [response, setResponse] = React.useState<[inp]>([
     {
       userType: MessageUserType.bot,
       data: "Hello. How can I help you today ?"
@@ -22,13 +31,14 @@ export default function ChatBox(): JSX.Element {
                 <MessageBubble userType={ele.userType} data={ele.data} key={val} />
               ))
             }
+            <Table />
           </div>
         </div>
         <div className="flex flex-row justify-center m-3">
           <div className="sm:w-[70%] w-full">
             <Input
               placeholder="Enter a Search query"
-              className="rounded-[100px] text-lg h-[6vh]" />
+              className="rounded-[100px] text-lg" />
           </div>
         </div>
       </div>
