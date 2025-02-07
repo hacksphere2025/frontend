@@ -35,10 +35,10 @@ export default function ChatBox(): JSX.Element {
           </div>
         </div>
         <div className="flex flex-row justify-center m-3">
-          <div className="sm:w-[70%] w-full">
+          <div className="sm:w-[70%] w-full m-2">
             <Input
               placeholder="Enter a Search query"
-              className="rounded-[100px] text-lg" />
+              className="rounded-[100px] text-lg h-[4vh]" />
           </div>
         </div>
       </div>
