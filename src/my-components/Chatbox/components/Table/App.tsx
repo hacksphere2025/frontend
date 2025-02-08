@@ -1,31 +1,30 @@
 import { Input } from "@/components/ui/input";
-import { JSX } from "react";
+import { JSX, useEffect } from "react";
 import TableTile from "./Tile/App";
-import { TableTileInterface } from "@/types/Functions/TableTile";
+import { Product } from "@/types/Functions/TableTile";
 import React from "react";
 
-export default function Table(): JSX.Element {
-  const data: TableTileInterface[] = [
-    {
-      index: 0,
-      image: "test@123",
-      price: 100,
-      itemName: "Ooty Orange",
-      availableQty: 10.5,
-      unit: "Kg",
-      sellerName: "Amazon",
-      freshness: "Fresh",
-      date: "25/04/24",
-      selectedQty: 0,
-      city: "Erode",
-    },
-  ];
+export default function Table({
+  product,
+}: {
+  product: Array<any>;
+}): JSX.Element {
+  const [data, setData] = React.useState<Product[]>([]);
 
-  const [sampleData, setSampleData] =
-    React.useState<TableTileInterface[]>(data);
+  useEffect(() => {
+    const productArray: Product[] = [];
+    product.map((ele, val) => {
+      productArray.push({
+        ...ele,
+        selectedQty: 0,
+        index: val,
+      });
+    });
+    setData(productArray);
+  }, [product]);
 
   function updateVal(index: number, val: number): void {
-    setSampleData((prev) =>
+    setData((prev) =>
       prev.map((item, i) =>
         i === index
           ? { ...item, selectedQty: Math.max(0, item.selectedQty + val) }
@@ -36,13 +35,13 @@ export default function Table(): JSX.Element {
 
   return (
     <>
-      <div className="rounded-lg borde xl:max-w-[70%] border dark:shadow-lg dark:shadow-gray-900/90 shadow-md">
+      <div className="rounded-lg sm:max-w-[40%] border dark:shadow-lg dark:shadow-gray-900/90 shadow-md">
         <div className="m-2 border p-2 rounded-lg">
           <Input placeholder="Filter the items" className="rounded-lg" />
         </div>
         <div className="flex flex-col p-2 space-y-5">
-          {sampleData.map((ele) => (
-            <TableTile data={ele} updateValueFunc={updateVal} />
+          {data.map((ele, key) => (
+            <TableTile data={ele} key={key} updateValueFunc={updateVal} />
           ))}
         </div>
       </div>

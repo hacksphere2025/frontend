@@ -3,21 +3,20 @@ import { createContext, useContext, useState, ReactNode } from "react";
 
 type UserContextType = {
   user: User | null;
-  login: (userData: User) => void;
-  logout: () => void;
+  setUser: (userData: User) => void;
+  clear: () => void;
 };
 
 const UserContext = createContext<UserContextType | null>(null);
 
-
 export const UserProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
 
-  const login = (userData: User) => setUser(userData);
-  const logout = () => setUser(null);
+  const setUserData = (userData: User) => setUser(userData);
+  const clear = () => setUser(null);
 
   return (
-    <UserContext.Provider value={{ user, login, logout }}>
+    <UserContext.Provider value={{ user, setUser: setUserData, clear }}>
       {children}
     </UserContext.Provider>
   );
@@ -30,4 +29,3 @@ export const useUser = (): UserContextType => {
   }
   return context;
 };
-;

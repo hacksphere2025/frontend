@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { TableTileInterface } from "@/types/Functions/TableTile";
+import { Product } from "@/types/Functions/TableTile";
 import {
   Calendar,
   MapPin,
@@ -15,18 +15,20 @@ export default function TableTile({
   data,
   updateValueFunc,
 }: {
-  data: TableTileInterface;
+  data: Product;
   updateValueFunc: (index: number, val: number) => void;
 }): JSX.Element {
+  const parsedDate = Date.parse(data.harvest_date);
+  console.log(parsedDate.toLocaleString)
   return (
-    <div className="flex flex-wrap md:flex-nowrap w-full border rounded-md h-auto md:h-[23vh] p-2">
+    <div className="flex flex-wrap md:flex-nowrap border rounded-md h-auto p-2">
       {/* Image Container */}
-      <div className="h-32 md:h-full bg-black w-full md:w-1/3 rounded-md md:rounded-l-md ml-2"></div>
+      <div className="h-full md:h-full bg-black md:w-1/3 rounded-md md:rounded-l-md ml-2"></div>
 
       {/* Details */}
       <div className="flex flex-col justify-between ml-2 w-full space-y-1">
         <div className="text-xl md:text-3xl font-roboto font-semibold">
-          {data.itemName}
+          {data.name}
         </div>
 
         {/* Price */}
@@ -41,28 +43,28 @@ export default function TableTile({
         {/* Seller */}
         <div className="flex items-center gap-x-2 text-sm">
           <Store size={16} />
-          {data.sellerName}
+          {data.seller_id.name}
         </div>
 
         {/* Location */}
         <div className="flex items-center gap-x-2 text-sm">
           <MapPin size={16} />
-          {data.city}
+          {data.location.city}
         </div>
 
         {/* Date */}
         <div className="flex items-center gap-x-2 text-sm">
           <Calendar size={16} />
-          {data.date}
+          {data.harvest_date}
         </div>
 
         {/* Quantity */}
         <div className="flex items-center gap-x-2 text-sm">
           <Weight size={16} />
-          {data.availableQty} {data.unit}
+          {data.quantity} {data.unit}
         </div>
       </div>
-      <div className="sm:flex sm:flex-col-reverse flex flex-row gap-2 ">
+      <div className="flex flex-row w-full sm:flex sm:flex-col-reverse sm:w-min items-center justify-start gap-2 ">
         <Button>Buy Now</Button>
         {data.selectedQty == 0 ? (
           <Button

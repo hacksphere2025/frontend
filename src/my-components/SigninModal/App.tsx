@@ -24,6 +24,8 @@ import { api } from "@/api/App";
 import { useSessionStore } from "@/store/sessionStore";
 import { useToast } from "@/hooks/use-toast";
 import axios from "axios";
+import { useUser } from "@/provider/userProvider/App";
+import { User } from "@/types/User";
 
 export default function SiginInModal({
   signInDialogState,
@@ -32,6 +34,7 @@ export default function SiginInModal({
   signInDialogState: boolean;
   setSignInDialogState: React.Dispatch<React.SetStateAction<boolean>>;
 }): JSX.Element {
+  const { setUser } = useUser();
   const { toast } = useToast();
   const formSchema = z.object({
     email: z.string().email({
@@ -58,17 +61,36 @@ export default function SiginInModal({
       });
       if (response.status == 200) {
         useSessionStore.setState({ token: response.data.data.token });
-        setSignInDialogState(false);
-        toast({
-          title: "Sucess",
-          description: "Sucessfully signed in to your account.",
-        });
+        const userData = await api.get("/user");
+        if (userData.status == 200) {
+          const user: User = {
+            userName: response.data.data.name,
+            email: response.data.data.email,
+            phoneNo: response.data.data.phoneNo,
+            id: response.data.data._id,
+          };
+          setUser(user);
+          setSignInDialogState(false);
+          toast({
+            title: "Sucess",
+            description: "Sucessfully signed in to your account.",
+          });
+        } else {
+          throw Error("User not fetched sucessfully");
+        }
       }
     } catch (error: unknown) {
-      if (axios.isAxiosError(error) && error.response?.status == 403) {
+      if (axios.isAxiosError(error) && error.response?.status == 402) {
         form.setError("password", {
           type: "manual",
           message: "Invalid email or password",
+        });
+        return;
+      }
+      if (axios.isAxiosError(error) && error.response?.status == 403) {
+        form.setError("password", {
+          type: "manual",
+          message: "User not found. Please signup.",
         });
         return;
       }

@@ -14,28 +14,25 @@ function App() {
 
   return (
     <>
-      <div className="flex flex-col-reverse h-screen w-screen dark:bg-black overflow-y-scroll">
-        <ChatBox />
-        <div className="flex flex-row-reverse">
-          <div className="flex flex-row justify-center m-2 space-x-4">
-            <Cart />
-            <ModeToggle />
-            <SiginInModal
-              setSignInDialogState={setSignInDialogState}
-              signInDialogState={signInDialogState}
-            />
-            {user ? (
-              <CustomAvatar url="RS" />
-            ) : (
-              <Button type="button" onClick={() => setSignInDialogState(true)}>
-                Sign In
-              </Button>
-            )}
-          </div>
+      <div className="flex flex-col dark:bg-black w-full">
+        <div className="flex flex-row justify-end m-2 space-x-4">
+          <Cart />
+          <ModeToggle />
+          <SiginInModal
+            setSignInDialogState={setSignInDialogState}
+            signInDialogState={signInDialogState}
+          />
+          {user ? (
+            <CustomAvatar url="RS" />
+          ) : (
+            <Button type="button" onClick={() => setSignInDialogState(true)}>
+              Sign In
+            </Button>
+          )}
         </div>
+        <ChatBox />
       </div>
     </>
   );
 }
-
 export default App;
