@@ -1,63 +1,84 @@
-import { Button } from '@/components/ui/button';
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog';
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
-import { Input } from '@/components/ui/input';
+import { Button } from "@/components/ui/button";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
 import { JSX } from "react";
-import React from 'react';
-import { useForm } from 'react-hook-form';
-import { zodResolver } from "@hookform/resolvers/zod"
-import { z } from "zod"
-import { api } from '@/api/App';
-import { useSessionStore } from '@/store/sessionStore';
-import { useToast } from '@/hooks/use-toast';
+import React from "react";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { z } from "zod";
+import { api } from "@/api/App";
+import { useSessionStore } from "@/store/sessionStore";
+import { useToast } from "@/hooks/use-toast";
+import axios from "axios";
 
-export default function SiginInModal({ signInDialogState, setSignInDialogState }: { signInDialogState: boolean, setSignInDialogState: React.Dispatch<React.SetStateAction<boolean>> }): JSX.Element {
+export default function SiginInModal({
+  signInDialogState,
+  setSignInDialogState,
+}: {
+  signInDialogState: boolean;
+  setSignInDialogState: React.Dispatch<React.SetStateAction<boolean>>;
+}): JSX.Element {
   const { toast } = useToast();
   const formSchema = z.object({
     email: z.string().email({
-      message: "Email must be valid"
+      message: "Email must be valid",
     }),
     password: z.string().min(4, {
-      message: "Enter a valid password"
-    })
-  })
+      message: "Enter a valid password",
+    }),
+  });
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       email: "",
-      password: ""
+      password: "",
     },
-  })
+  });
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     try {
-      const response = await api.post("/auth/signin", {
-        "email": values.email,
-        "password": values.password
-      })
+      const response = await api.post("/auth/login", {
+        email: values.email,
+        password: values.password,
+      });
       if (response.status == 200) {
         useSessionStore.setState({ token: response.data.data.token });
-        setSignInDialogState(false)
+        setSignInDialogState(false);
         toast({
           title: "Sucess",
           description: "Sucessfully signed in to your account.",
-        })
-      }
-      if (response.status == 403) {
-        form.setError("password", {
-          type: "manual",
-          message: "Invalid email or password"
         });
       }
-    } catch (error) {
+    } catch (error: unknown) {
+      if (axios.isAxiosError(error) && error.response?.status == 403) {
+        form.setError("password", {
+          type: "manual",
+          message: "Invalid email or password",
+        });
+        return;
+      }
       form.setError("password", {
         type: "manual",
-        message: "Internal Server Error"
+        message: "Internal Server Error",
       });
       console.log(error);
     }
-  }
+  };
   return (
     <Dialog open={signInDialogState} onOpenChange={setSignInDialogState}>
       <DialogContent className="max-w-md p-6">
