@@ -1,15 +1,20 @@
 import React from "react";
 import { JSX } from "react";
-import MessageBubble from "./components/MessageBubble";
+import MessageBubble, { LoadingChatBubble } from "./components/MessageBubble";
 import { Send } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
 import { api } from "@/api/App";
-import { ChatDataType, MessageCategory } from "@/types/Functions/Chatbot";
-import { MessageUserType } from "@/types/Message";
+import { MessageUserType } from "@/types/Functions/Message";
+import { ChatDataType, MessageCategory } from "@/types/Functions/ChatBox";
+import { useUser } from "@/provider/userProvider/App";
 
 export default function ChatBox(): JSX.Element {
+  const toast = useToast();
+  const { user } = useUser();
+
   const [userPrompt, setUserPrompt] = React.useState<string>("");
+  const [loading, setLoading] = React.useState<boolean>(false);
   const [response, setResponse] = React.useState<ChatDataType[]>([
     {
       user: MessageUserType.bot,
@@ -17,8 +22,6 @@ export default function ChatBox(): JSX.Element {
       type: MessageCategory.none,
     },
   ]);
-
-  const toast = useToast();
 
   const fetchData = async (data: string) => {
     try {
@@ -30,8 +33,9 @@ export default function ChatBox(): JSX.Element {
         console.log(response.data);
         let messageType: MessageCategory | undefined = undefined;
         if (response.data.data.type == "list_cons") {
-          console.log("hello");
           messageType = MessageCategory.list_cons;
+        } else if (response.data.data.type == "none") {
+          messageType = MessageCategory.none;
         }
         const payload: ChatDataType = {
           message: response.data.message,
@@ -42,11 +46,24 @@ export default function ChatBox(): JSX.Element {
         setResponse((prev) => [...prev, payload]);
       }
     } catch (error) {
+      const payload: ChatDataType = {
+        message: "Some Error Occured. Please try again",
+        user: MessageUserType.bot,
+        type: MessageCategory.none,
+      };
+      setResponse((prev) => [...prev, payload]);
       console.log(error);
     }
   };
 
   const appendMessage = async () => {
+    if (!user) {
+      toast.toast({
+        title: "Error",
+        description: "Please sign in and try again.",
+      });
+      return;
+    }
     if (userPrompt.trim() == "") {
       toast.toast({ title: "Error", description: "Please enter your query" });
       return;
@@ -56,8 +73,10 @@ export default function ChatBox(): JSX.Element {
       type: MessageCategory.none,
       message: userPrompt,
     };
+    setLoading(true);
     setResponse((prev) => [...prev, userMsg]);
     await fetchData(userPrompt);
+    setLoading(false);
     setUserPrompt("");
   };
 
@@ -69,6 +88,7 @@ export default function ChatBox(): JSX.Element {
             {response.map((ele, val) => (
               <MessageBubble data={ele} key={val} />
             ))}
+            {loading && <LoadingChatBubble />}
           </div>
         </div>
         <div className="flex flex-row justify-center m-3">
@@ -77,7 +97,7 @@ export default function ChatBox(): JSX.Element {
               value={userPrompt}
               onChange={(e) => setUserPrompt(e.target.value)}
               placeholder="Enter your query"
-              className="outline-none w-full h-9 dark:bg-black"
+              className="outline-none w-full h-9 dark:bg-zinc-950"
             />
             <Button className="rounded-lg" onClick={() => appendMessage()}>
               <Send />

@@ -61,23 +61,7 @@ export default function SiginInModal({
       });
       if (response.status == 200) {
         useSessionStore.setState({ token: response.data.data.token });
-        const userData = await api.get("/user");
-        if (userData.status == 200) {
-          const user: User = {
-            userName: response.data.data.name,
-            email: response.data.data.email,
-            phoneNo: response.data.data.phoneNo,
-            id: response.data.data._id,
-          };
-          setUser(user);
-          setSignInDialogState(false);
-          toast({
-            title: "Sucess",
-            description: "Sucessfully signed in to your account.",
-          });
-        } else {
-          throw Error("User not fetched sucessfully");
-        }
+        await fetchUserDetail();
       }
     } catch (error: unknown) {
       if (axios.isAxiosError(error) && error.response?.status == 402) {
@@ -101,6 +85,32 @@ export default function SiginInModal({
       console.log(error);
     }
   };
+
+  const fetchUserDetail = async () => {
+    try {
+      const userData = await api.get("/user");
+      if (userData.status == 200) {
+        const payload = userData.data;
+        const user: User = {
+          userName: payload.data.name,
+          email: payload.data.email,
+          phoneNo: payload.data.phone_no,
+          id: payload.data._id,
+        };
+        setUser(user);
+        setSignInDialogState(false);
+        toast({
+          title: "Sucess",
+          description: "Sucessfully signed in to your account.",
+        });
+      } else {
+        throw Error("User not fetched sucessfully");
+      }
+    } catch (e) {
+      console.log(e);
+    }
+  };
+
   return (
     <Dialog open={signInDialogState} onOpenChange={setSignInDialogState}>
       <DialogContent className="max-w-md p-6">

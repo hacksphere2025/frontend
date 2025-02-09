@@ -1,19 +1,6 @@
-export type Category = {
-  _id: string;
-  name: string;
-};
-
-export type Seller = {
-  _id: string;
-  name: string;
-  email: string;
-};
-
-export type Location = {
-  _id: string;
-  city: string;
-  state: string;
-};
+import { Category } from "./Category";
+import { Seller } from "./Seller";
+import { Location } from "./Location";
 
 export type Product = {
   _id: string;

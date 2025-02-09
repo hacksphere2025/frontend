@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { Product } from "@/types/Functions/TableTile";
+import { Product } from "@/types/Product/Product";
 import {
   Calendar,
   MapPin,
@@ -18,12 +18,10 @@ export default function TableTile({
   data: Product;
   updateValueFunc: (index: number, val: number) => void;
 }): JSX.Element {
-  const parsedDate = Date.parse(data.harvest_date);
-  console.log(parsedDate.toLocaleString)
   return (
-    <div className="flex flex-wrap md:flex-nowrap border rounded-md h-auto p-2">
+    <div className="flex flex-col border rounded-md h-auto p-2">
       {/* Image Container */}
-      <div className="h-full md:h-full bg-black md:w-1/3 rounded-md md:rounded-l-md ml-2"></div>
+      <div className=""></div>
 
       {/* Details */}
       <div className="flex flex-col justify-between ml-2 w-full space-y-1">
@@ -64,8 +62,7 @@ export default function TableTile({
           {data.quantity} {data.unit}
         </div>
       </div>
-      <div className="flex flex-row w-full sm:flex sm:flex-col-reverse sm:w-min items-center justify-start gap-2 ">
-        <Button>Buy Now</Button>
+      <div className="flex flex-row items-center w-full justify-between p-2">
         {data.selectedQty == 0 ? (
           <Button
             onClick={() => {
@@ -75,7 +72,7 @@ export default function TableTile({
             <ShoppingCart />
           </Button>
         ) : (
-          <div className="flex flex-row items-center justify-around w-full">
+          <div className="flex flex-row items-center justify-around w-min">
             <button
               onClick={() => {
                 updateValueFunc(data.index, -0.05);
@@ -93,6 +90,7 @@ export default function TableTile({
             </button>
           </div>
         )}
+        <Button>Buy Now</Button>
       </div>
     </div>
   );
