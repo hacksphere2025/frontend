@@ -1,22 +1,57 @@
+import { Product } from "@/types/Product/Product";
 import { User } from "@/types/User";
 import { createContext, useContext, useState, ReactNode } from "react";
 
 type UserContextType = {
   user: User | null;
   setUser: (userData: User) => void;
+  cart: Map<string, Cart>;
+  setCart: (key: string, value: Cart) => void;
+  removeElementCart: (key: string) => void;
   clear: () => void;
+};
+
+type Cart = {
+  product: Product;
+  quantity: number;
 };
 
 const UserContext = createContext<UserContextType | null>(null);
 
 export const UserProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
+  const [cart, setCart] = useState<Map<string, Cart>>(new Map<string, Cart>());
 
   const setUserData = (userData: User) => setUser(userData);
-  const clear = () => setUser(null);
+
+  const updateMap = (key: string, value: Cart) => {
+    setCart((map) => new Map(map.set(key, value)));
+  };
+
+  const removeMap = (key: string) => {
+    setCart((prevMap) => {
+      const newMap = new Map(prevMap);
+      newMap.delete(key);
+      return newMap;
+    });
+  };
+
+  const clear = () => {
+    setUser(null);
+    setCart(new Map<string, Cart>());
+  };
 
   return (
-    <UserContext.Provider value={{ user, setUser: setUserData, clear }}>
+    <UserContext.Provider
+      value={{
+        user,
+        setUser: setUserData,
+        cart,
+        setCart: updateMap,
+        removeElementCart: removeMap,
+        clear,
+      }}
+    >
       {children}
     </UserContext.Provider>
   );

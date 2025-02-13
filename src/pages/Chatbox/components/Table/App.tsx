@@ -15,26 +15,14 @@ export default function Table({
 
   useEffect(() => {
     const productArray: Product[] = [];
-    product.map((ele, val) => {
+    product.map((ele) => {
       productArray.push({
         ...ele,
-        selectedQty: 0,
-        index: val,
       });
     });
     setAllData(productArray);
     setData(productArray);
   }, [product]);
-
-  function updateVal(index: number, val: number): void {
-    setAllData((prev) =>
-      prev.map((item, i) =>
-        i === index
-          ? { ...item, selectedQty: Math.max(0, item.selectedQty + val) }
-          : item,
-      ),
-    );
-  }
 
   useEffect(() => {
     if (filterByName.trim() == "") {
@@ -60,7 +48,7 @@ export default function Table({
         </div>
         <div className="grid lg:grid-cols-4 grid-cols-1 gap-2 sm:max-h-[50vh] overflow-y-auto max-h-[80vh]">
           {data.map((ele, key) => (
-            <TableTile data={ele} key={key} updateValueFunc={updateVal} />
+            <TableTile data={ele} key={key} />
           ))}
         </div>
       </div>

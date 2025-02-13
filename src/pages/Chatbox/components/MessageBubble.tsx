@@ -15,7 +15,7 @@ export default function MessageBubble({
       {data.user == MessageUserType.user ? (
         <div className="max-w-[80%] text-left flex flex-row">
           <CustomAvatar url="RS" />
-          <div className="border rounded-lg p-3 m-2 dark:bg-zinc-800 bg-gray-400">
+          <div className="border rounded-lg p-3 m-2 dark:bg-zinc-800 bg-gray-200">
             {data.message}
           </div>
         </div>

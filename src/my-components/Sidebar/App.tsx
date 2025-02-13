@@ -4,13 +4,12 @@ import {
   SidebarContent,
   SidebarGroup,
   SidebarGroupContent,
-  SidebarHeader,
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
-import { Bot, ListOrdered, UsersRound } from "lucide-react";
-import { Link, useNavigate } from "react-router-dom";
+import { Bot, ListOrdered, User, UsersRound } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 import { useUser } from "@/provider/userProvider/App";
 import { useToast } from "@/hooks/use-toast";
 
@@ -19,6 +18,11 @@ const items = [
     title: "Chatbot",
     url: "/",
     icon: Bot,
+  },
+  {
+    title: "Your Profile",
+    url: "profile",
+    icon: User,
   },
   {
     title: "Your Orders",
@@ -50,27 +54,29 @@ export default function CustomSidebar(): JSX.Element {
   };
 
   return (
-    <Sidebar variant="sidebar" collapsible="offcanvas" className="dark:bg-black">
-      <SidebarHeader>
-        <SidebarContent>
-          <SidebarGroup>
-            <SidebarGroupContent>
-              <SidebarMenu>
-                {items.map((item) => (
-                  <SidebarMenuItem key={item.title}>
-                    <SidebarMenuButton asChild>
-                      <button onClick={() => navigate(item.url)}>
-                        <item.icon />
-                        <span>{item.title}</span>
-                      </button>
-                    </SidebarMenuButton>
-                  </SidebarMenuItem>
-                ))}
-              </SidebarMenu>
-            </SidebarGroupContent>
-          </SidebarGroup>
-        </SidebarContent>
-      </SidebarHeader>
+    <Sidebar
+      variant="sidebar"
+      collapsible="offcanvas"
+      className="dark:bg-black"
+    >
+      <SidebarContent>
+        <SidebarGroup>
+          <SidebarGroupContent>
+            <SidebarMenu>
+              {items.map((item) => (
+                <SidebarMenuItem key={item.title}>
+                  <SidebarMenuButton asChild>
+                    <button onClick={() => navigate(item.url)}>
+                      <item.icon />
+                      <span>{item.title}</span>
+                    </button>
+                  </SidebarMenuButton>
+                </SidebarMenuItem>
+              ))}
+            </SidebarMenu>
+          </SidebarGroupContent>
+        </SidebarGroup>
+      </SidebarContent>
     </Sidebar>
   );
 }

@@ -4,7 +4,6 @@ import { Location } from "./Location";
 
 export type Product = {
   _id: string;
-  index: number;
   category: Category;
   name: string;
   quantity: number;
@@ -15,5 +14,4 @@ export type Product = {
   freshness: number;
   harvest_date: string;
   location: Location;
-  selectedQty: number;
 };

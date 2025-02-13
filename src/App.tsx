@@ -10,6 +10,7 @@ import CustomSidebar from "./my-components/Sidebar/App";
 import { SidebarTrigger } from "./components/ui/sidebar";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { Order } from "./pages/Order/App";
+import { Profile } from "./pages/Profile/App";
 
 function App() {
   const { user } = useUser();
@@ -40,6 +41,7 @@ function App() {
           <Routes>
             <Route element={<ChatBox />} path="/" />
             <Route element={<Order />} path="/order" />
+            <Route element={<Profile />} path="/profile" />
           </Routes>
         </div>
       </BrowserRouter>

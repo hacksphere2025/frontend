@@ -1,4 +1,6 @@
 import { Button } from "@/components/ui/button";
+import { convertToStandardWeight } from "@/my-components/Weight/App";
+import { useUser } from "@/provider/userProvider/App";
 import { Product } from "@/types/Product/Product";
 import {
   Calendar,
@@ -11,13 +13,9 @@ import {
 } from "lucide-react";
 import { JSX } from "react";
 
-export default function TableTile({
-  data,
-  updateValueFunc,
-}: {
-  data: Product;
-  updateValueFunc: (index: number, val: number) => void;
-}): JSX.Element {
+export default function TableTile({ data }: { data: Product }): JSX.Element {
+  const { setCart, cart, removeElementCart } = useUser();
+
   return (
     <div className="flex flex-col border rounded-md h-auto p-2">
       {/* Image Container */}
@@ -63,27 +61,42 @@ export default function TableTile({
         </div>
       </div>
       <div className="flex flex-row items-center w-full justify-between p-2">
-        {data.selectedQty == 0 ? (
+        {cart.get(data._id) == null || cart.get(data._id)?.quantity == 0 ? (
           <Button
             onClick={() => {
-              updateValueFunc(data.index, 0.1);
+              setCart(data._id, {
+                product: data,
+                quantity: 100,
+              });
             }}
           >
             <ShoppingCart />
           </Button>
         ) : (
-          <div className="flex flex-row items-center justify-around w-min">
+          <div className="flex flex-row items-center justify-around">
             <button
               onClick={() => {
-                updateValueFunc(data.index, -0.05);
+                const value = cart.get(data._id)!.quantity;
+                if (value - 100 <= 0) {
+                  removeElementCart(data._id);
+                  return;
+                }
+                setCart(data._id, {
+                  product: data,
+                  quantity: value - 100,
+                });
               }}
             >
               <Minus />
             </button>
-            {data.selectedQty.toPrecision(3)}
+            {convertToStandardWeight(cart.get(data._id)!.quantity)}
             <button
               onClick={() => {
-                updateValueFunc(data.index, 0.05);
+                const value = cart.get(data._id)!.quantity;
+                setCart(data._id, {
+                  product: data,
+                  quantity: value + 100,
+                });
               }}
             >
               <Plus />
