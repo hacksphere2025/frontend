@@ -8,6 +8,8 @@ type UserContextType = {
   cart: Map<string, Cart>;
   setCart: (key: string, value: Cart) => void;
   removeElementCart: (key: string) => void;
+  selectedSession: string;
+  setSelectedSession: React.Dispatch<React.SetStateAction<string>>;
   setSession: React.Dispatch<React.SetStateAction<SidebarSession[]>>;
   session: SidebarSession[];
   clear: () => void;
@@ -24,6 +26,7 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
   const [cart, setCart] = useState<Map<string, Cart>>(new Map<string, Cart>());
   const [session, setSession] = useState<SidebarSession[]>([]);
+  const [selectedSession, setSelectedSession] = useState<string>("");
 
   const setUserData = (userData: User) => setUser(userData);
 
@@ -56,6 +59,8 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
         setSession: setSession,
         session,
         clear,
+        setSelectedSession,
+        selectedSession,
       }}
     >
       {children}

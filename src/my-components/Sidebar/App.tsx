@@ -9,7 +9,7 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
-import { Bot, ChevronDown, ListOrdered, User, UsersRound } from "lucide-react";
+import { ListOrdered, Plus, User, UsersRound } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useUser } from "@/provider/userProvider/App";
 import { useToast } from "@/hooks/use-toast";
@@ -20,11 +20,6 @@ import {
 } from "@/components/ui/collapsible";
 
 const items = [
-  {
-    title: "Chatbot",
-    url: "/",
-    icon: Bot,
-  },
   {
     title: "Your Profile",
     url: "profile",
@@ -45,7 +40,7 @@ const items = [
 export default function CustomSidebar(): JSX.Element {
   const navigator = useNavigate();
   const toast = useToast();
-  const { user, session } = useUser();
+  const { user, session, selectedSession, setSelectedSession } = useUser();
 
   const navigate = (url: string) => {
     if (!user && url == "/") {
@@ -72,7 +67,12 @@ export default function CustomSidebar(): JSX.Element {
               {items.map((item) => (
                 <SidebarMenuItem key={item.title}>
                   <SidebarMenuButton asChild>
-                    <button onClick={() => navigate(item.url)}>
+                    <button
+                      onClick={() => {
+                        setSelectedSession("");
+                        navigate(item.url);
+                      }}
+                    >
                       <item.icon />
                       <span>{item.title}</span>
                     </button>
@@ -88,18 +88,39 @@ export default function CustomSidebar(): JSX.Element {
               <SidebarGroupLabel asChild>
                 <CollapsibleTrigger>
                   Your Sessions
-                  <ChevronDown className="ml-auto transition-transform group-data-[state=open]/collapsible:rotate-180" />
+                  <Plus className="ml-auto transition-transform group-data-[state=open]/collapsible:rotate-180" />
                 </CollapsibleTrigger>
               </SidebarGroupLabel>
               <CollapsibleContent>
                 <SidebarMenu>
                   {session.map((item) => (
                     <SidebarMenuItem key={item.title}>
-                      <SidebarMenuButton asChild>
-                        <button onClick={() => navigate(`/chat/${item._id}`)}>
-                          <span>{item.title}</span>
-                        </button>
-                      </SidebarMenuButton>
+                      {selectedSession == item._id ? (
+                        <SidebarMenuButton
+                          asChild
+                          className="dark:bg-white dark:text-black bg-black text-white"
+                        >
+                          <button
+                            onClick={() => {
+                              setSelectedSession(item._id);
+                              navigate(`/chat/${item._id}`);
+                            }}
+                          >
+                            <span>{item.title}</span>
+                          </button>
+                        </SidebarMenuButton>
+                      ) : (
+                        <SidebarMenuButton asChild>
+                          <button
+                            onClick={() => {
+                              setSelectedSession(item._id);
+                              navigate(`/chat/${item._id}`);
+                            }}
+                          >
+                            <span>{item.title}</span>
+                          </button>
+                        </SidebarMenuButton>
+                      )}
                     </SidebarMenuItem>
                   ))}
                 </SidebarMenu>

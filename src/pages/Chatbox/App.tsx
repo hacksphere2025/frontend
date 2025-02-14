@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { JSX } from "react";
 import MessageBubble, { LoadingChatBubble } from "./components/MessageBubble";
 import { Send } from "lucide-react";
@@ -16,20 +16,11 @@ export default function ChatBox(): JSX.Element {
   const toast = useToast();
   const { user } = useUser();
 
-  const [currentSessionId, setCurrentSessionId] = useState<string | null>(null);
   const [userPrompt, setUserPrompt] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(false);
   const [response, setResponse] = useState<ChatDataType[]>([]);
-  //window.history.replaceState(null, "", "/new-path");
 
-  React.useEffect(() => {
-    if (sessionId != undefined) {
-      setCurrentSessionId(sessionId);
-      fetchSessionData(sessionId);
-    }
-  }, [sessionId]);
-
-  const fetchSessionData = async (string: sessionId) => {
+  const fetchSessionData = async (sessionId: string) => {
     const response = await api.get(`/session/${sessionId}`);
     if (response.status == 200) {
       const chatData: ChatDataType[] = [];
@@ -43,7 +34,7 @@ export default function ChatBox(): JSX.Element {
           });
           return;
         }
-        if (ele.type == null) {
+        if (ele.type == "none") {
           chatData.push({
             user: MessageUserType.bot,
             message: ele.message,
@@ -71,6 +62,20 @@ export default function ChatBox(): JSX.Element {
       ]);
     }
   };
+
+  React.useEffect(() => {
+    if (sessionId != undefined) {
+      fetchSessionData(sessionId);
+    } else {
+      setResponse(() => [
+        {
+          user: MessageUserType.bot,
+          message: "Hello. How can I help you today ?",
+          type: MessageCategory.none,
+        },
+      ]);
+    }
+  }, [sessionId]);
 
   const fetchChatbotResponse = async (data: string) => {
     try {

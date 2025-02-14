@@ -100,6 +100,18 @@ export default function SiginInModal({
     }
   };
 
+  const getCurrentUserSesssionDetails = async () => {
+    try {
+      const response = await api.get("/session");
+      if (response.status == 200) {
+        setSession([...response.data.data]);
+      }
+      console.log(response.data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   const fetchUserDetail = async () => {
     try {
       const userData = await api.get("/user");
@@ -112,8 +124,8 @@ export default function SiginInModal({
           id: payload.data._id,
           session: []
         };
+        await getCurrentUserSesssionDetails();
         setUser(user);
-        setSession(payload.data.session);
         setSignInDialogState(false);
         toast({
           title: "Sucess",

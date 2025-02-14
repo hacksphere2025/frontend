@@ -19,6 +19,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import Home from "./pages/Home/App";
 
 function App() {
   const navigate = useNavigate();
@@ -31,7 +32,6 @@ function App() {
       <CustomSidebar />
       <SidebarTrigger />
       <div className="flex flex-col w-full">
-        
         <div className="flex flex-row justify-end m-2 space-x-4">
           <Cart />
           <ModeToggle />
@@ -66,13 +66,13 @@ function App() {
               Sign In
             </Button>
           )}
-          </div>
-          <Routes>
-            <Route element={<ChatBox />} path="/" />
-            <Route element={<ChatBox />} path="/chat/:sessionId" />
-            <Route element={<Order />} path="/order" />
-            <Route element={<Profile />} path="/profile" />
-          </Routes>
+        </div>
+        <Routes>
+          <Route element={<Home />} path="/" />
+          <Route element={<ChatBox />} path="/chat/:sessionId" />
+          <Route element={<Order />} path="/order" />
+          <Route element={<Profile />} path="/profile" />
+        </Routes>
       </div>
     </>
   );
