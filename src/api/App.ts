@@ -1,5 +1,5 @@
 import { useSessionStore } from "@/store/sessionStore";
-import axios, { AxiosError, InternalAxiosRequestConfig } from "axios";
+import axios, { InternalAxiosRequestConfig } from "axios";
 
 export const api = axios.create({
   baseURL: "http://localhost:8080/api",

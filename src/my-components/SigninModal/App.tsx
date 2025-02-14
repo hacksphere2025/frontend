@@ -14,9 +14,18 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
+
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+
 import { Input } from "@/components/ui/input";
 import { JSX } from "react";
-import React from "react";
+import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -36,6 +45,8 @@ export default function SiginInModal({
 }): JSX.Element {
   const { setUser, setSession } = useUser();
   const { toast } = useToast();
+  const [selectedLoginType, setSelectedLoginType] = useState("Buyer");
+
   const formSchema = z.object({
     email: z.string().email({
       message: "Email must be valid",
@@ -43,6 +54,7 @@ export default function SiginInModal({
     password: z.string().min(4, {
       message: "Enter a valid password",
     }),
+    type: z.enum(["buyer", "seller"]),
   });
 
   const form = useForm<z.infer<typeof formSchema>>({
@@ -50,6 +62,7 @@ export default function SiginInModal({
     defaultValues: {
       email: "",
       password: "",
+      type: "buyer",
     },
   });
 
@@ -58,6 +71,7 @@ export default function SiginInModal({
       const response = await api.post("/auth/login", {
         email: values.email,
         password: values.password,
+        type: selectedLoginType.toLowerCase(),
       });
       if (response.status == 200) {
         useSessionStore.setState({ token: response.data.data.token });
@@ -96,6 +110,7 @@ export default function SiginInModal({
           email: payload.data.email,
           phoneNo: payload.data.phone_no,
           id: payload.data._id,
+          session: []
         };
         setUser(user);
         setSession(payload.data.session);
@@ -162,14 +177,25 @@ export default function SiginInModal({
                 </FormItem>
               )}
             />
-
-            {/* Submit Button */}
-            <Button
-              type="submit"
-              className="w-full font-medium py-2 rounded-md transition-all"
-            >
-              Sign In
-            </Button>
+            <div className="flex justify-between items-center">
+              <div className="flex items-center space-x-2">
+                <Select onValueChange={(value) => setSelectedLoginType(value)}>
+                  <SelectTrigger className="w-[180px]">
+                    <SelectValue placeholder={selectedLoginType} />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="Buyer">Buyer</SelectItem>
+                    <SelectItem value="Seller">Seller</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              <Button
+                type="submit"
+                className="w-50% font-medium py-2 rounded-md transition-all"
+              >
+                Sign In
+              </Button>
+            </div>
           </form>
         </Form>
       </DialogContent>

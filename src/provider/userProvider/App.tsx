@@ -42,6 +42,7 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
   const clear = () => {
     setUser(null);
     setCart(new Map<string, Cart>());
+    setSession([]);
   };
 
   return (
