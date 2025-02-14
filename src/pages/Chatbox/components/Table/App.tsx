@@ -46,11 +46,17 @@ export default function Table({
             className="rounded-lg"
           />
         </div>
-        <div className="grid lg:grid-cols-4 grid-cols-1 gap-2 sm:max-h-[50vh] overflow-y-auto max-h-[80vh]">
-          {data.map((ele, key) => (
-            <TableTile data={ele} key={key} />
-          ))}
-        </div>
+        {data.length === 0 ? (
+          <div className="text-muted-foreground text-sm text-center">
+            No items found
+          </div>
+        ) : (
+          <div className="grid lg:grid-cols-4 grid-cols-1 gap-2 sm:max-h-[50vh] overflow-y-auto max-h-[70vh] p-2">
+            {data.map((ele, key) => (
+              <TableTile data={ele} key={key} />
+            ))}
+          </div>
+        )}
       </div>
     </>
   );

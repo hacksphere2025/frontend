@@ -34,7 +34,7 @@ export default function SiginInModal({
   signInDialogState: boolean;
   setSignInDialogState: React.Dispatch<React.SetStateAction<boolean>>;
 }): JSX.Element {
-  const { setUser } = useUser();
+  const { setUser, setSession } = useUser();
   const { toast } = useToast();
   const formSchema = z.object({
     email: z.string().email({
@@ -98,6 +98,7 @@ export default function SiginInModal({
           id: payload.data._id,
         };
         setUser(user);
+        setSession(payload.data.session);
         setSignInDialogState(false);
         toast({
           title: "Sucess",

@@ -72,8 +72,13 @@ export default function CartDropdown() {
             </CardContent>
           </Card>
         ))}
-
-        <Button className="w-full">Checkout</Button>
+        {Array.from(cart.entries()).length == 0 ? (
+          <div className="text-muted-foreground text-sm text-center m-2 p-2">
+            No items in cart
+          </div>
+        ) : (
+          <Button className="w-full">Checkout</Button>
+        )}
       </DropdownMenuContent>
     </DropdownMenu>
   );

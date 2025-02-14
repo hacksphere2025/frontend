@@ -1,5 +1,5 @@
 import { Product } from "@/types/Product/Product";
-import { User } from "@/types/User";
+import { SidebarSession, User } from "@/types/User";
 import { createContext, useContext, useState, ReactNode } from "react";
 
 type UserContextType = {
@@ -8,6 +8,8 @@ type UserContextType = {
   cart: Map<string, Cart>;
   setCart: (key: string, value: Cart) => void;
   removeElementCart: (key: string) => void;
+  setSession: React.Dispatch<React.SetStateAction<SidebarSession[]>>;
+  session: SidebarSession[];
   clear: () => void;
 };
 
@@ -21,6 +23,7 @@ const UserContext = createContext<UserContextType | null>(null);
 export const UserProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
   const [cart, setCart] = useState<Map<string, Cart>>(new Map<string, Cart>());
+  const [session, setSession] = useState<SidebarSession[]>([]);
 
   const setUserData = (userData: User) => setUser(userData);
 
@@ -49,6 +52,8 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
         cart,
         setCart: updateMap,
         removeElementCart: removeMap,
+        setSession: setSession,
+        session,
         clear,
       }}
     >

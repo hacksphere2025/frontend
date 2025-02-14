@@ -40,6 +40,7 @@ function App() {
           </div>
           <Routes>
             <Route element={<ChatBox />} path="/" />
+            <Route element={<ChatBox />} path="/chat/:sessionId" />
             <Route element={<Order />} path="/order" />
             <Route element={<Profile />} path="/profile" />
           </Routes>
