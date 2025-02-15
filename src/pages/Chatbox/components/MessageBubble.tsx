@@ -4,6 +4,7 @@ import Table from "./Table/App";
 import { Skeleton } from "@/components/ui/skeleton";
 import { ChatDataType, MessageCategory } from "@/types/Functions/ChatBox";
 import { MessageUserType } from "@/types/Functions/Message";
+import { LoginType } from "@/types/User";
 
 export default function MessageBubble({
   data,
@@ -21,7 +22,7 @@ export default function MessageBubble({
         </div>
       ) : (
         <>
-          {data.type == MessageCategory.list_cons && (
+          {data.type == MessageCategory.place_order_for_user && (
             <>
               <div className="w-full flex ">
                 <div className="text-left flex flex-row max-w-[80%]">
@@ -31,7 +32,7 @@ export default function MessageBubble({
                   </div>
                 </div>
               </div>
-              <Table product={data.data!} />
+              <Table product={data.data!} type={LoginType.Buyer} />
             </>
           )}
 
@@ -43,6 +44,18 @@ export default function MessageBubble({
                   {data.message}
                 </div>
               </div>
+            </div>
+          )}
+
+          {data.type == MessageCategory.list_cons && (
+            <div className="w-full flex-row">
+              <div className="text-left flex flex-row max-w-[80%]">
+                <CustomAvatar url="B" />
+                <div className="border rounded-lg p-3 m-2 dark:bg-zinc-800 bg-gray-200">
+                  {data.message}
+                </div>
+              </div>
+              <Table product={data.data!} type={LoginType.Buyer} />
             </div>
           )}
         </>

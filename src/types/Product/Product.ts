@@ -12,6 +12,6 @@ export type Product = {
   image: string;
   seller_id: Seller;
   freshness: number;
-  harvest_date: string;
+  harvest_date: Date;
   location: Location;
 };

@@ -18,7 +18,13 @@ export default function ChatBox(): JSX.Element {
 
   const [userPrompt, setUserPrompt] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(false);
-  const [response, setResponse] = useState<ChatDataType[]>([]);
+  const [response, setResponse] = useState<ChatDataType[]>([
+    {
+      user: MessageUserType.bot,
+      message: "Hello how can I help you?",
+      type: MessageCategory.none,
+    },
+  ]);
 
   const fetchSessionData = async (sessionId: string) => {
     const response = await api.get(`/session/${sessionId}`);
@@ -134,7 +140,6 @@ export default function ChatBox(): JSX.Element {
     setLoading(false);
     setUserPrompt("");
   };
-
   return (
     <>
       <div className="flex flex-col md:min-w-[60%] w-full h-full justify-between">

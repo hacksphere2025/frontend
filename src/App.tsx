@@ -20,6 +20,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import Home from "./pages/Home/App";
+import { LoginType } from "./types/User";
 
 function App() {
   const navigate = useNavigate();
@@ -33,7 +34,7 @@ function App() {
       <SidebarTrigger />
       <div className="flex flex-col w-full">
         <div className="flex flex-row justify-end m-2 space-x-4">
-          <Cart />
+          {user?.loginType === LoginType.Buyer && <Cart />}
           <ModeToggle />
           <SiginInModal
             setSignInDialogState={setSignInDialogState}

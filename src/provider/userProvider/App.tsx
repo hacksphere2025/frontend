@@ -3,15 +3,24 @@ import { SidebarSession, User } from "@/types/User";
 import { createContext, useContext, useState, ReactNode } from "react";
 
 type UserContextType = {
+  //user
   user: User | null;
   setUser: (userData: User) => void;
+
+  //cart
   cart: Map<string, Cart>;
   setCart: (key: string, value: Cart) => void;
   removeElementCart: (key: string) => void;
+
+  //sidebar session highlight
   selectedSession: string;
   setSelectedSession: React.Dispatch<React.SetStateAction<string>>;
+
+  //sidebar session list
   setSession: React.Dispatch<React.SetStateAction<SidebarSession[]>>;
   session: SidebarSession[];
+
+  //clear state
   clear: () => void;
 };
 
@@ -56,7 +65,7 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
         cart,
         setCart: updateMap,
         removeElementCart: removeMap,
-        setSession: setSession,
+        setSession,
         session,
         clear,
         setSelectedSession,

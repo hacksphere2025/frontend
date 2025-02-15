@@ -3,11 +3,14 @@ import { JSX, useEffect } from "react";
 import TableTile from "./Tile/App";
 import React from "react";
 import { Product } from "@/types/Product/Product";
+import { LoginType } from "@/types/User";
 
 export default function Table({
   product,
+  type,
 }: {
   product: Array<any>;
+  type: LoginType;
 }): JSX.Element {
   const [allData, setAllData] = React.useState<Product[]>([]);
   const [data, setData] = React.useState<Product[]>([]);
@@ -37,7 +40,7 @@ export default function Table({
 
   return (
     <>
-      <div className="rounded-lg max-w-[75%] border dark:shadow-lg dark:shadow-gray-900/90 shadow-md p-2">
+      <div className="rounded-lg max-w-[75%] border dark:shadow-lg dark:shadow-gray-900/90 shadow-md p-2 my-4">
         <div className="m-2 border p-2 rounded-lg">
           <Input
             onChange={(data) => setFilterByName(data.target.value)}
@@ -53,7 +56,7 @@ export default function Table({
         ) : (
           <div className="grid lg:grid-cols-4 grid-cols-1 gap-2 sm:max-h-[50vh] overflow-y-auto max-h-[70vh] p-2">
             {data.map((ele, key) => (
-              <TableTile data={ele} key={key} />
+              <TableTile data={ele} key={key} type={type} />
             ))}
           </div>
         )}

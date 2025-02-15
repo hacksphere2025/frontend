@@ -34,7 +34,8 @@ import { useSessionStore } from "@/store/sessionStore";
 import { useToast } from "@/hooks/use-toast";
 import axios from "axios";
 import { useUser } from "@/provider/userProvider/App";
-import { User } from "@/types/User";
+import { LoginType, User } from "@/types/User";
+import { Label } from "@/components/ui/label";
 
 export default function SiginInModal({
   signInDialogState,
@@ -122,7 +123,11 @@ export default function SiginInModal({
           email: payload.data.email,
           phoneNo: payload.data.phone_no,
           id: payload.data._id,
-          session: []
+          loginType:
+            payload.data.loginType == "buyer"
+              ? LoginType.Buyer
+              : LoginType.Seller,
+          session: [],
         };
         await getCurrentUserSesssionDetails();
         setUser(user);
@@ -191,16 +196,23 @@ export default function SiginInModal({
             />
             <div className="flex justify-between items-center">
               <div className="flex items-center space-x-2">
-                <Select onValueChange={(value) => setSelectedLoginType(value)}>
-                  <SelectTrigger className="w-[180px]">
-                    <SelectValue placeholder={selectedLoginType} />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="Buyer">Buyer</SelectItem>
-                    <SelectItem value="Seller">Seller</SelectItem>
-                  </SelectContent>
-                </Select>
+                <div className="grid w-full max-w-sm items-center gap-1.5">
+                  <Label htmlFor="email">Email</Label>
+                  <Select
+                    onValueChange={(value) => setSelectedLoginType(value)}
+                  >
+                    <SelectTrigger className="w-[180px]">
+                      <SelectValue placeholder={selectedLoginType} />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="buyer">Buyer</SelectItem>
+                      <SelectItem value="seller">Seller</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
               </div>
+            </div>
+            <div className="flex flex-row items-end justify-end">
               <Button
                 type="submit"
                 className="w-50% font-medium py-2 rounded-md transition-all"

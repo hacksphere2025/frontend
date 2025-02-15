@@ -3,6 +3,8 @@ export enum MessageCategory {
   list_prod_prod,
   update_list_prod,
   list_cons,
+  list_all_seller,
+  place_order_for_user,
   none,
 }
 
