@@ -56,6 +56,15 @@ export default function ChatBox(): JSX.Element {
             data: [...ele.data],
           });
           return;
+        } else if (ele.type == "list_prod_prod") {
+          if (ele.data)
+            chatData.push({
+              user: MessageUserType.bot,
+              message: ele.message,
+              type: MessageCategory.list_prod_prod,
+              data: [...ele.data],
+            });
+          return;
         }
       });
       setResponse(() => [
@@ -97,6 +106,8 @@ export default function ChatBox(): JSX.Element {
           messageType = MessageCategory.list_cons;
         } else if (response.data.data.type == "none") {
           messageType = MessageCategory.none;
+        } else if (response.data.data.type == "list_prod_prod") {
+          messageType = MessageCategory.list_prod_prod;
         }
         const payload: ChatDataType = {
           message: response.data.message,

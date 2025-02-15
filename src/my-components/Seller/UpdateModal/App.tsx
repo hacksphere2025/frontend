@@ -31,6 +31,7 @@ export default function UpdateProductDialog({
   };
 
   const handleSubmit = () => {
+    console.log(updatedProduct);
     onUpdate(updatedProduct);
     setModalState(false);
   };

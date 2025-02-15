@@ -82,6 +82,12 @@ export default function TableTile({
           <Weight size={16} />
           {convertToStandardWeight(data.quantity)}
         </div>
+
+        {/* Quantity */}
+        <div className="flex items-center gap-x-2 text-sm">
+          <Weight size={16} />
+          {convertToStandardWeight(data.sold_qty)}
+        </div>
       </div>
       {type == LoginType.Buyer && (
         <div className="flex flex-row items-center w-full justify-between p-2">

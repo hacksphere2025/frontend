@@ -22,20 +22,6 @@ export default function MessageBubble({
         </div>
       ) : (
         <>
-          {data.type == MessageCategory.place_order_for_user && (
-            <>
-              <div className="w-full flex ">
-                <div className="text-left flex flex-row max-w-[80%]">
-                  <CustomAvatar url="B" />
-                  <div className="border rounded-lg p-3 m-2 dark:bg-zinc-800 bg-gray-200">
-                    {data.message}
-                  </div>
-                </div>
-              </div>
-              <Table product={data.data!} type={LoginType.Buyer} />
-            </>
-          )}
-
           {data.type == MessageCategory.none && (
             <div className="w-full flex-row">
               <div className="text-left flex flex-row max-w-[80%]">
@@ -56,6 +42,18 @@ export default function MessageBubble({
                 </div>
               </div>
               <Table product={data.data!} type={LoginType.Buyer} />
+            </div>
+          )}
+
+          {data.type == MessageCategory.list_prod_prod && (
+            <div className="w-full flex-row">
+              <div className="text-left flex flex-row max-w-[80%]">
+                <CustomAvatar url="B" />
+                <div className="border rounded-lg p-3 m-2 dark:bg-zinc-800 bg-gray-200">
+                  {data.message}
+                </div>
+              </div>
+              <Table product={data.data!} type={LoginType.Seller} />
             </div>
           )}
         </>

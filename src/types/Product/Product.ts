@@ -6,6 +6,7 @@ export type Product = {
   _id: string;
   category: Category;
   name: string;
+  sold_qty: number;
   quantity: number;
   unit: string;
   price: number;

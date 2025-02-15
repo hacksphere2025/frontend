@@ -15,17 +15,9 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-
 import { Input } from "@/components/ui/input";
 import { JSX } from "react";
-import React, { useState } from "react";
+import React from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -35,7 +27,6 @@ import { useToast } from "@/hooks/use-toast";
 import axios from "axios";
 import { useUser } from "@/provider/userProvider/App";
 import { LoginType, User } from "@/types/User";
-import { Label } from "@/components/ui/label";
 
 export default function SiginInModal({
   signInDialogState,
@@ -46,7 +37,6 @@ export default function SiginInModal({
 }): JSX.Element {
   const { setUser, setSession } = useUser();
   const { toast } = useToast();
-  const [selectedLoginType, setSelectedLoginType] = useState("Buyer");
 
   const formSchema = z.object({
     email: z.string().email({
@@ -55,7 +45,6 @@ export default function SiginInModal({
     password: z.string().min(4, {
       message: "Enter a valid password",
     }),
-    type: z.enum(["buyer", "seller"]),
   });
 
   const form = useForm<z.infer<typeof formSchema>>({
@@ -63,16 +52,15 @@ export default function SiginInModal({
     defaultValues: {
       email: "",
       password: "",
-      type: "buyer",
     },
   });
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
+    console.log("hello");
     try {
       const response = await api.post("/auth/login", {
         email: values.email,
         password: values.password,
-        type: selectedLoginType.toLowerCase(),
       });
       if (response.status == 200) {
         useSessionStore.setState({ token: response.data.data.token });
@@ -124,7 +112,7 @@ export default function SiginInModal({
           phoneNo: payload.data.phone_no,
           id: payload.data._id,
           loginType:
-            payload.data.loginType == "buyer"
+            payload.data.userType == "user"
               ? LoginType.Buyer
               : LoginType.Seller,
           session: [],
@@ -194,32 +182,12 @@ export default function SiginInModal({
                 </FormItem>
               )}
             />
-            <div className="flex justify-between items-center">
-              <div className="flex items-center space-x-2">
-                <div className="grid w-full max-w-sm items-center gap-1.5">
-                  <Label htmlFor="email">Email</Label>
-                  <Select
-                    onValueChange={(value) => setSelectedLoginType(value)}
-                  >
-                    <SelectTrigger className="w-[180px]">
-                      <SelectValue placeholder={selectedLoginType} />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="buyer">Buyer</SelectItem>
-                      <SelectItem value="seller">Seller</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-              </div>
-            </div>
-            <div className="flex flex-row items-end justify-end">
-              <Button
-                type="submit"
-                className="w-50% font-medium py-2 rounded-md transition-all"
-              >
-                Sign In
-              </Button>
-            </div>
+            <Button
+              type="submit"
+              className="w-50% font-medium py-2 rounded-md transition-all"
+            >
+              Sign In
+            </Button>
           </form>
         </Form>
       </DialogContent>
