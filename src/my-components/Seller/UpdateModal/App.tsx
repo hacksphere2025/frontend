@@ -8,8 +8,12 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Product } from "@/types/Product/Product";
+import { Category } from "@/types/Product/Category";
+import { api } from "@/api/App";
+import { Select, SelectContent, SelectTrigger } from "@/components/ui/select";
+import { SelectValue } from "@radix-ui/react-select";
 
 type UpdateProductDialogProps = {
   modalState: boolean;
@@ -25,7 +29,21 @@ export default function UpdateProductDialog({
   onUpdate,
 }: UpdateProductDialogProps) {
   const [updatedProduct, setUpdatedProduct] = useState<Product>(product);
+  const [categories, setCategories] = useState<Category[]>([]);
 
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const response = await api.get("/category");
+        if (response.status == 200) {
+          setCategories([...response.data.data]);
+        }
+      } catch (error) {
+        console.error("Failed to fetch categories:", error);
+      }
+    };
+    fetchCategories();
+  }, []);
   const handleChange = (field: keyof Product, value: string | number) => {
     setUpdatedProduct((prev) => ({ ...prev, [field]: value }));
   };
@@ -56,11 +74,16 @@ export default function UpdateProductDialog({
           </div>
           <div>
             <Label htmlFor="category">Category</Label>
-            <Input
-              id="category"
-              //value={updatedProduct.category}
-              onChange={(e) => handleChange("category", e.target.value)}
-            />
+            <Select>
+              <SelectTrigger className="w-[280px]">
+                <SelectValue placeholder="Select Category" />
+              </SelectTrigger>
+              <SelectContent>
+                {categories.map((ele) => (
+                  <SelectValue>{ele.name}</SelectValue>
+                ))}
+              </SelectContent>
+            </Select>
           </div>
           <div>
             <Label htmlFor="quantity">Quantity</Label>
@@ -106,14 +129,6 @@ export default function UpdateProductDialog({
               type="date"
               //value={updatedProduct.harvest_date}
               onChange={(e) => handleChange("harvest_date", e.target.value)}
-            />
-          </div>
-          <div>
-            <Label htmlFor="image">Image URL</Label>
-            <Input
-              id="image"
-              value={updatedProduct.image}
-              onChange={(e) => handleChange("image", e.target.value)}
             />
           </div>
           <div className="flex justify-end gap-2 mt-4">

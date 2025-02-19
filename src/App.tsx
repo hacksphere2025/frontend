@@ -56,6 +56,7 @@ function App() {
                   onSelect={() => {
                     setSignInDialogState(false);
                     clear();
+                    navigate("/");
                   }}
                 >
                   Logout
